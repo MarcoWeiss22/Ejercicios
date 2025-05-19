@@ -1,13 +1,28 @@
-traje = {
-    "modelo": "Mark XLIV",
-    "pelicula": "Avengers: Age of Ultron",
-    "estado": "Dañado"
-}
+# Definición del TDA Pila
+class Pila:
+    def __init__(self):
+        self.items = []
 
+    def apilar(self, item):
+        self.items.append(item)
+
+    def desapilar(self):
+        return self.items.pop() if not self.esta_vacia() else None
+
+    def esta_vacia(self):
+        return len(self.items) == 0
+
+    def en_cima(self):
+        return self.items[-1] if not self.esta_vacia() else None
+
+    def tamanio(self):
+        return len(self.items)
+
+# Funciones para trabajar con los trajes de Iron Man
 def modelo_hulkbuster(pila):
     aux = Pila()
     encontrado = False
-    print("Películas con el modelo Mark XLIV (Hulkbuster):")
+    print("\nPelículas con el modelo Mark XLIV (Hulkbuster):")
     while not pila.esta_vacia():
         traje = pila.desapilar()
         if traje["modelo"] == "Mark XLIV":
@@ -21,7 +36,7 @@ def modelo_hulkbuster(pila):
 
 def mostrar_danados(pila):
     aux = Pila()
-    print("Modelos que quedaron dañados:")
+    print("\nModelos que quedaron dañados:")
     while not pila.esta_vacia():
         traje = pila.desapilar()
         if traje["estado"] == "Dañado":
@@ -32,7 +47,7 @@ def mostrar_danados(pila):
 
 def eliminar_destruidos(pila):
     aux = Pila()
-    print("Modelos destruidos eliminados:")
+    print("\nModelos destruidos eliminados:")
     while not pila.esta_vacia():
         traje = pila.desapilar()
         if traje["estado"] == "Destruido":
@@ -53,13 +68,13 @@ def agregar_modelo(pila, modelo, pelicula, estado):
     if not repetido:
         aux.apilar({"modelo": modelo, "pelicula": pelicula, "estado": estado})
     else:
-        print(f"Ya existe el modelo {modelo} en la película {pelicula}")
+        print(f"\nYa existe el modelo {modelo} en la película {pelicula}")
     while not aux.esta_vacia():
         pila.apilar(aux.desapilar())
 
 def mostrar_trajes_peliculas(pila, peliculas):
     aux = Pila()
-    print("Trajes usados en películas seleccionadas:")
+    print("\nTrajes usados en películas seleccionadas:")
     while not pila.esta_vacia():
         traje = pila.desapilar()
         if traje["pelicula"] in peliculas:
