@@ -1,4 +1,25 @@
-# Funciones para trabajar con la pila de personajes
+#TDA PILA
+class Pila:
+    def __init__(self):
+        self.items = []
+
+    def apilar(self, item):
+        self.items.append(item)
+
+    def desapilar(self):
+        return self.items.pop() if not self.esta_vacia() else None
+
+    def esta_vacia(self):
+        return len(self.items) == 0
+
+    def en_cima(self):
+        return self.items[-1] if not self.esta_vacia() else None
+
+    def tamanio(self):
+        return len(self.items)
+
+#FUNCIONES
+
 def posicion_personaje(pila, nombres):
     aux = Pila()
     pos = 1
@@ -48,3 +69,19 @@ def personajes_por_letras(pila, letras):
         aux.apilar(personaje)
     while not aux.esta_vacia():
         pila.apilar(aux.desapilar())
+
+#CARGA Y EJECUCIÓN
+
+pila_personajes = Pila()
+pila_personajes.apilar({"nombre": "Iron Man", "peliculas": 10})
+pila_personajes.apilar({"nombre": "Groot", "peliculas": 4})
+pila_personajes.apilar({"nombre": "Rocket Raccoon", "peliculas": 5})
+pila_personajes.apilar({"nombre": "Black Widow", "peliculas": 7})
+pila_personajes.apilar({"nombre": "Doctor Strange", "peliculas": 3})
+pila_personajes.apilar({"nombre": "Captain America", "peliculas": 9})
+pila_personajes.apilar({"nombre": "Gamora", "peliculas": 5})
+
+posicion_personaje(pila_personajes, ["Rocket Raccoon", "Groot"])
+personajes_mas_de_5(pila_personajes)
+cantidad_viuda_negra(pila_personajes)
+personajes_por_letras(pila_personajes, ["C", "D", "G"])
