@@ -1,3 +1,9 @@
+traje = {
+    "modelo": "Mark XLIV",
+    "pelicula": "Avengers: Age of Ultron",
+    "estado": "Dañado"
+}
+
 def modelo_hulkbuster(pila):
     aux = Pila()
     encontrado = False
