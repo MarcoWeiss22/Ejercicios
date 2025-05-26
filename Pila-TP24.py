@@ -1,87 +1,77 @@
-#TDA PILA
-class Pila:
-    def __init__(self):
-        self.items = []
 
-    def apilar(self, item):
-        self.items.append(item)
+from stack import Stack
 
-    def desapilar(self):
-        return self.items.pop() if not self.esta_vacia() else None
+class PersonajeMCU:
+    def __init__(self, nombre, peliculas):
+        self.nombre = nombre
+        self.peliculas = peliculas
 
-    def esta_vacia(self):
-        return len(self.items) == 0
+    def __str__(self):
+        return f"{self.nombre} - {self.peliculas} películas"
 
-    def en_cima(self):
-        return self.items[-1] if not self.esta_vacia() else None
+# Datos de prueba
+personajes = [
+    PersonajeMCU('Iron Man', 10),
+    PersonajeMCU('Capitan America', 9),
+    PersonajeMCU('Black Widow', 8),
+    PersonajeMCU('Hulk', 6),
+    PersonajeMCU('Rocket Raccoon', 5),
+    PersonajeMCU('Groot', 4),
+    PersonajeMCU('Doctor Strange', 4),
+    PersonajeMCU('Gamora', 5),
+    PersonajeMCU('Drax', 5),
+    PersonajeMCU('Carol Danvers', 3)
+]
 
-    def tamanio(self):
-        return len(self.items)
+pila_personajes = Stack()
+for personaje in personajes:
+    pila_personajes.push(personaje)
 
-#FUNCIONES
+# a. Posición de Rocket Raccoon y Groot
+print("--- a. Posiciones ---")
+aux = Stack()
+posiciones = {}
+pos = 1
+while pila_personajes.size() > 0:
+    personaje = pila_personajes.pop()
+    if personaje.nombre in ['Rocket Raccoon', 'Groot']:
+        posiciones[personaje.nombre] = pos
+    aux.push(personaje)
+    pos += 1
+while aux.size() > 0:
+    pila_personajes.push(aux.pop())
+for nombre in ['Rocket Raccoon', 'Groot']:
+    print(f"{nombre} está en la posición {posiciones.get(nombre, 'no encontrada')}")
 
-def posicion_personaje(pila, nombres):
-    aux = Pila()
-    pos = 1
-    encontrados = {nombre: None for nombre in nombres}
-    while not pila.esta_vacia():
-        personaje = pila.desapilar()
-        if personaje["nombre"] in nombres:
-            encontrados[personaje["nombre"]] = pos
-        aux.apilar(personaje)
-        pos += 1
-    while not aux.esta_vacia():
-        pila.apilar(aux.desapilar())
-    print("\nPosiciones de personajes:")
-    for nombre in nombres:
-        print(f"{nombre}: posición {encontrados[nombre] if encontrados[nombre] else 'no encontrada'}")
+# b. Más de 5 películas
+print("\n--- b. Personajes con más de 5 películas ---")
+aux = Stack()
+while pila_personajes.size() > 0:
+    personaje = pila_personajes.pop()
+    if personaje.peliculas > 5:
+        print(personaje)
+    aux.push(personaje)
+while aux.size() > 0:
+    pila_personajes.push(aux.pop())
 
-def personajes_mas_de_5(pila):
-    aux = Pila()
-    print("\nPersonajes con más de 5 películas:")
-    while not pila.esta_vacia():
-        personaje = pila.desapilar()
-        if personaje["peliculas"] > 5:
-            print(f"- {personaje['nombre']} ({personaje['peliculas']} películas)")
-        aux.apilar(personaje)
-    while not aux.esta_vacia():
-        pila.apilar(aux.desapilar())
+# c. Películas de Black Widow
+print("\n--- c. Películas de Black Widow ---")
+aux = Stack()
+while pila_personajes.size() > 0:
+    personaje = pila_personajes.pop()
+    if personaje.nombre == 'Black Widow':
+        print(f"Black Widow participó en {personaje.peliculas} películas")
+    aux.push(personaje)
+while aux.size() > 0:
+    pila_personajes.push(aux.pop())
 
-def cantidad_viuda_negra(pila):
-    aux = Pila()
-    cantidad = 0
-    while not pila.esta_vacia():
-        personaje = pila.desapilar()
-        if personaje["nombre"] == "Black Widow":
-            cantidad = personaje["peliculas"]
-        aux.apilar(personaje)
-    while not aux.esta_vacia():
-        pila.apilar(aux.desapilar())
-    print(f"\nBlack Widow participó en {cantidad} películas.")
-
-def personajes_por_letras(pila, letras):
-    aux = Pila()
-    print(f"\nPersonajes cuyos nombres empiezan con {', '.join(letras)}:")
-    while not pila.esta_vacia():
-        personaje = pila.desapilar()
-        if personaje["nombre"][0].upper() in letras:
-            print(f"- {personaje['nombre']}")
-        aux.apilar(personaje)
-    while not aux.esta_vacia():
-        pila.apilar(aux.desapilar())
-
-#CARGA Y EJECUCIÓN
-
-pila_personajes = Pila()
-pila_personajes.apilar({"nombre": "Iron Man", "peliculas": 10})
-pila_personajes.apilar({"nombre": "Groot", "peliculas": 4})
-pila_personajes.apilar({"nombre": "Rocket Raccoon", "peliculas": 5})
-pila_personajes.apilar({"nombre": "Black Widow", "peliculas": 7})
-pila_personajes.apilar({"nombre": "Doctor Strange", "peliculas": 3})
-pila_personajes.apilar({"nombre": "Captain America", "peliculas": 9})
-pila_personajes.apilar({"nombre": "Gamora", "peliculas": 5})
-
-posicion_personaje(pila_personajes, ["Rocket Raccoon", "Groot"])
-personajes_mas_de_5(pila_personajes)
-cantidad_viuda_negra(pila_personajes)
-personajes_por_letras(pila_personajes, ["C", "D", "G"])
+# d. Nombres que comienzan con C, D o G
+print("\n--- d. Personajes que comienzan con C, D o G ---")
+aux = Stack()
+while pila_personajes.size() > 0:
+    personaje = pila_personajes.pop()
+    if personaje.nombre.startswith(('C', 'D', 'G')):
+        print(personaje)
+    aux.push(personaje)
+while aux.size() > 0:
+    pila_personajes.push(aux.pop())
