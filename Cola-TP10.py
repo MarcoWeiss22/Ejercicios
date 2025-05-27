@@ -1,80 +1,69 @@
-#TDA COLA
-class Cola:
-    def __init__(self):
-        self.items = []
 
-    def encolar(self, item):
-        self.items.insert(0, item)
+from queue_ import Queue
+from stack import Stack
 
-    def desencolar(self):
-        return self.items.pop() if not self.esta_vacia() else None
+class Notificacion:
+    def __init__(self, hora, app, mensaje):
+        self.hora = hora  # formato "HH:MM"
+        self.app = app
+        self.mensaje = mensaje
 
-    def esta_vacia(self):
-        return len(self.items) == 0
+    def __str__(self):
+        return f"[{self.hora}] {self.app}: {self.mensaje}"
 
-    def tamanio(self):
-        return len(self.items)
+def hora_en_rango(hora, inicio, fin):
+    return inicio <= hora <= fin
 
-#TDA PILA
-class Pila:
-    def __init__(self):
-        self.items = []
+# Datos de prueba
+notificaciones = [
+    Notificacion("10:00", "Facebook", "Nueva solicitud de amistad"),
+    Notificacion("11:45", "Twitter", "Aprende Python con ejemplos"),
+    Notificacion("12:30", "Instagram", "Nueva historia"),
+    Notificacion("14:20", "Twitter", "Python es genial"),
+    Notificacion("16:00", "Facebook", "Sugerencia de página"),
+    Notificacion("15:30", "WhatsApp", "Mensaje de grupo"),
+]
 
-    def apilar(self, item):
-        self.items.append(item)
+cola_notificaciones = Queue()
+for n in notificaciones:
+    cola_notificaciones.arrive(n)
 
-    def desapilar(self):
-        return self.items.pop() if not self.esta_vacia() else None
+# a. Eliminar notificaciones de Facebook
+print("--- a. Eliminar Facebook ---")
+aux = Queue()
+while cola_notificaciones.size() > 0:
+    n = cola_notificaciones.attention()
+    if n.app != "Facebook":
+        aux.arrive(n)
+while aux.size() > 0:
+    cola_notificaciones.arrive(aux.attention())
+cola_notificaciones.show()
 
-    def esta_vacia(self):
-        return len(self.items) == 0
+# b. Mostrar notificaciones de Twitter con 'Python'
+print("\n--- b. Twitter y Python ---")
+aux = Queue()
+while cola_notificaciones.size() > 0:
+    n = cola_notificaciones.attention()
+    if n.app == "Twitter" and "Python" in n.mensaje:
+        print(n)
+    aux.arrive(n)
+while aux.size() > 0:
+    cola_notificaciones.arrive(aux.attention())
 
-#FUNCIONES
+# c. Almacenar en pila notificaciones entre 11:43 y 15:57
+print("\n--- c. Notificaciones entre 11:43 y 15:57 ---")
+stack = Stack()
+inicio = "11:43"
+fin = "15:57"
+aux = Queue()
+contador = 0
+while cola_notificaciones.size() > 0:
+    n = cola_notificaciones.attention()
+    if hora_en_rango(n.hora, inicio, fin):
+        stack.push(n)
+        contador += 1
+    aux.arrive(n)
+while aux.size() > 0:
+    cola_notificaciones.arrive(aux.attention())
 
-def eliminar_facebook(cola):
-    aux = Cola()
-    while not cola.esta_vacia():
-        notif = cola.desencolar()
-        if notif["app"] != "Facebook":
-            aux.encolar(notif)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
-
-def mostrar_twitter_python(cola):
-    aux = Cola()
-    print("\nNotificaciones de Twitter con 'Python':")
-    while not cola.esta_vacia():
-        notif = cola.desencolar()
-        if notif["app"] == "Twitter" and "python" in notif["mensaje"].lower():
-            print(f"{notif['hora']} - {notif['mensaje']}")
-        aux.encolar(notif)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
-
-def filtrar_por_hora(cola, desde, hasta):
-    pila = Pila()
-    aux = Cola()
-    count = 0
-    while not cola.esta_vacia():
-        notif = cola.desencolar()
-        if desde <= notif["hora"] <= hasta:
-            pila.apilar(notif)
-            count += 1
-        aux.encolar(notif)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
-    print(f"\nNotificaciones entre {desde} y {hasta}: {count}")
-
-#CARGA Y EJECUCIÓN
-
-cola_notif = Cola()
-cola_notif.encolar({"hora": "10:30", "app": "Twitter", "mensaje": "Buenos días"})
-cola_notif.encolar({"hora": "11:45", "app": "Facebook", "mensaje": "Recordá actualizar tu perfil"})
-cola_notif.encolar({"hora": "12:10", "app": "Twitter", "mensaje": "Novedades de Python 3.12"})
-cola_notif.encolar({"hora": "14:30", "app": "Instagram", "mensaje": "Nuevo mensaje"})
-cola_notif.encolar({"hora": "16:00", "app": "Facebook", "mensaje": "Nuevo evento"})
-cola_notif.encolar({"hora": "15:45", "app": "Twitter", "mensaje": "Python es tendencia"})
-
-eliminar_facebook(cola_notif)
-mostrar_twitter_python(cola_notif)
-filtrar_por_hora(cola_notif, "11:43", "15:57")
+print(f"Cantidad de notificaciones en ese rango: {contador}")
