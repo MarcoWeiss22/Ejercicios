@@ -1,103 +1,95 @@
-#TDA COLA
-class Cola:
-    def __init__(self):
-        self.items = []
 
-    def encolar(self, item):
-        self.items.insert(0, item)
+from queue_ import Queue
 
-    def desencolar(self):
-        return self.items.pop() if not self.esta_vacia() else None
+class PersonajeMCU:
+    def __init__(self, nombre_real, nombre_superheroe, genero):
+        self.nombre_real = nombre_real
+        self.nombre_superheroe = nombre_superheroe
+        self.genero = genero  # 'M' o 'F'
 
-    def esta_vacia(self):
-        return len(self.items) == 0
+    def __str__(self):
+        return f"{self.nombre_real} / {self.nombre_superheroe} - {self.genero}"
 
-#FUNCIONES
+# Datos de prueba
+personajes = [
+    PersonajeMCU("Tony Stark", "Iron Man", "M"),
+    PersonajeMCU("Steve Rogers", "Capitán América", "M"),
+    PersonajeMCU("Natasha Romanoff", "Black Widow", "F"),
+    PersonajeMCU("Carol Danvers", "Capitana Marvel", "F"),
+    PersonajeMCU("Scott Lang", "Ant-Man", "M"),
+    PersonajeMCU("Stephen Strange", "Doctor Strange", "M"),
+]
 
-def buscar_personaje(cola, personaje):
-    aux = Cola()
-    encontrado = False
-    while not cola.esta_vacia():
-        dato = cola.desencolar()
-        if dato["personaje"] == personaje:
-            print(f"\nEl personaje {personaje} es el superhéroe {dato['superheroe']}")
-            encontrado = True
-        aux.encolar(dato)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
-    if not encontrado:
-        print(f"\n{personaje} no encontrado.")
+cola_personajes = Queue()
+for p in personajes:
+    cola_personajes.arrive(p)
 
-def mostrar_superheroinas(cola):
-    aux = Cola()
-    print("\nSuperhéroes femeninos:")
-    while not cola.esta_vacia():
-        dato = cola.desencolar()
-        if dato["genero"] == "F":
-            print(f"- {dato['superheroe']}")
-        aux.encolar(dato)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
+# a. Personaje de Capitana Marvel
+print("--- a. Capitana Marvel ---")
+aux = Queue()
+while cola_personajes.size() > 0:
+    p = cola_personajes.attention()
+    if p.nombre_superheroe == "Capitana Marvel":
+        print("Personaje:", p.nombre_real)
+    aux.arrive(p)
+while aux.size() > 0:
+    cola_personajes.arrive(aux.attention())
 
-def mostrar_personajes_masculinos(cola):
-    aux = Cola()
-    print("\nPersonajes masculinos:")
-    while not cola.esta_vacia():
-        dato = cola.desencolar()
-        if dato["genero"] == "M":
-            print(f"- {dato['personaje']}")
-        aux.encolar(dato)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
+# b. Superhéroes femeninos
+print("\n--- b. Superhéroes Femeninos ---")
+aux = Queue()
+while cola_personajes.size() > 0:
+    p = cola_personajes.attention()
+    if p.genero == "F":
+        print(p.nombre_superheroe)
+    aux.arrive(p)
+while aux.size() > 0:
+    cola_personajes.arrive(aux.attention())
 
-def buscar_superheroe(cola, nombre_personaje):
-    aux = Cola()
-    while not cola.esta_vacia():
-        dato = cola.desencolar()
-        if dato["personaje"] == nombre_personaje:
-            print(f"\n{nombre_personaje} es {dato['superheroe']}")
-        aux.encolar(dato)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
+# c. Personajes masculinos
+print("\n--- c. Personajes Masculinos ---")
+aux = Queue()
+while cola_personajes.size() > 0:
+    p = cola_personajes.attention()
+    if p.genero == "M":
+        print(p.nombre_real)
+    aux.arrive(p)
+while aux.size() > 0:
+    cola_personajes.arrive(aux.attention())
 
-def mostrar_nombres_S(cola):
-    aux = Cola()
-    print("\nDatos de personajes o superhéroes que comienzan con 'S':")
-    while not cola.esta_vacia():
-        dato = cola.desencolar()
-        if dato["personaje"].startswith("S") or dato["superheroe"].startswith("S"):
-            print(dato)
-        aux.encolar(dato)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
+# d. Superhéroe de Scott Lang
+print("\n--- d. Superhéroe de Scott Lang ---")
+aux = Queue()
+while cola_personajes.size() > 0:
+    p = cola_personajes.attention()
+    if p.nombre_real == "Scott Lang":
+        print("Superhéroe:", p.nombre_superheroe)
+    aux.arrive(p)
+while aux.size() > 0:
+    cola_personajes.arrive(aux.attention())
 
-def verificar_carol_danvers(cola):
-    aux = Cola()
-    encontrado = False
-    while not cola.esta_vacia():
-        dato = cola.desencolar()
-        if dato["personaje"] == "Carol Danvers":
-            print(f"\nCarol Danvers es {dato['superheroe']}")
-            encontrado = True
-        aux.encolar(dato)
-    while not aux.esta_vacia():
-        cola.encolar(aux.desencolar())
-    if not encontrado:
-        print("\nCarol Danvers no se encuentra en la cola.")
+# e. Mostrar todos cuyos nombres comienzan con S
+print("\n--- e. Nombres que comienzan con S ---")
+aux = Queue()
+while cola_personajes.size() > 0:
+    p = cola_personajes.attention()
+    if p.nombre_real.startswith("S") or p.nombre_superheroe.startswith("S"):
+        print(p)
+    aux.arrive(p)
+while aux.size() > 0:
+    cola_personajes.arrive(aux.attention())
 
-#CARGA Y EJECUCIÓN
-
-cola_mcu = Cola()
-cola_mcu.encolar({"personaje": "Tony Stark", "superheroe": "Iron Man", "genero": "M"})
-cola_mcu.encolar({"personaje": "Steve Rogers", "superheroe": "Capitán América", "genero": "M"})
-cola_mcu.encolar({"personaje": "Natasha Romanoff", "superheroe": "Black Widow", "genero": "F"})
-cola_mcu.encolar({"personaje": "Carol Danvers", "superheroe": "Capitana Marvel", "genero": "F"})
-cola_mcu.encolar({"personaje": "Scott Lang", "superheroe": "Ant-Man", "genero": "M"})
-cola_mcu.encolar({"personaje": "Stephen Strange", "superheroe": "Doctor Strange", "genero": "M"})
-
-buscar_personaje(cola_mcu, "Carol Danvers")
-mostrar_superheroinas(cola_mcu)
-mostrar_personajes_masculinos(cola_mcu)
-buscar_superheroe(cola_mcu, "Scott Lang")
-mostrar_nombres_S(cola_mcu)
-verificar_carol_danvers(cola_mcu)
+# f. Verificar si está Carol Danvers
+print("\n--- f. ¿Carol Danvers está? ---")
+encontrado = False
+aux = Queue()
+while cola_personajes.size() > 0:
+    p = cola_personajes.attention()
+    if p.nombre_real == "Carol Danvers":
+        encontrado = True
+        print(f"Está en la cola como {p.nombre_superheroe}")
+    aux.arrive(p)
+while aux.size() > 0:
+    cola_personajes.arrive(aux.attention())
+if not encontrado:
+    print("Carol Danvers no está en la cola.")
